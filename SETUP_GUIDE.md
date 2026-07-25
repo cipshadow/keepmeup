@@ -6,12 +6,12 @@ Your KeepMeUp app is ready! Choose how to launch it:
 
 ### Option 1: Quick Launch (Right Now)
 ```bash
-open ~/KeepMeUp/KeepMeUp.app
+open ~/keepmeup/KeepMeUp.app
 ```
 
 ### Option 2: Install to Applications (Recommended)
 ```bash
-bash ~/KeepMeUp/install.sh
+bash ~/keepmeup/install.sh
 ```
 
 Then find it in Spotlight (Cmd+Space → "KeepMeUp") or in Applications folder.
@@ -24,25 +24,29 @@ After launching the app, do these checks:
 
 ### 1. Look for the menu bar icon
 Look at the **very top right** of your screen near the clock and Wifi icon.
-You should see either:
-- **○** = App is running and screen sleep is OFF
-- **◉** = App is running and screen sleep is ON
+You should see a jagged star icon in one of three states:
+- **Outline star** = both modes off
+- **Glowing filled star** = Awake - screen on is on
+- **Plain filled star** = Awake - screen off is on
 
-### 2. Click the icon to test
-- Click the **○** icon 
-- It should change to **◉**
-- Click again to toggle back to **○**
-
-### 3. Check the menu
-- Click and hold the icon (or right-click)
+### 2. Check the menu
+- Click the icon
 - You should see a menu with:
-  - "Toggle Screen Awake"
+  - "Awake - screen on"
+  - "Awake - screen off"
   - "Quit"
 
-### 4. Test the functionality
-- Click "Toggle Screen Awake" to enable (should change to ✨)
-- Your screen should now stay awake indefinitely
+### 3. Test Awake - screen on
+- Click "Awake - screen on" — icon becomes a glowing filled star
+- Your screen and Mac should now stay awake indefinitely
 - Move away from your Mac and wait - normally the screen would sleep, but now it won't
+- Click it again to turn it off (icon returns to outline)
+
+### 4. Test Awake - screen off
+- Click "Awake - screen off" — icon becomes a plain filled star
+- Don't touch the mouse/keyboard for about a minute — the display should turn off on its own
+- Move the mouse — the display wakes up
+- Stay idle again — after another minute, it turns off again
 
 ---
 
@@ -53,7 +57,7 @@ You should see either:
 **Solution 1: Restart the app**
 ```bash
 pkill -f keepmeup_menu.py
-open ~/KeepMeUp/KeepMeUp.app
+open ~/keepmeup/KeepMeUp.app
 ```
 
 **Solution 2: Check the logs**
@@ -69,7 +73,7 @@ Try clicking the Spotlight search (Cmd+Space) and searching for "KeepMeUp" - the
 
 Run this to rebuild the environment:
 ```bash
-cd ~/KeepMeUp
+cd ~/keepmeup
 python3 -m venv venv --upgrade-deps
 source venv/bin/activate
 pip install rumps --upgrade
@@ -86,14 +90,21 @@ python3 keepmeup_menu.py
 
 | Icon | Status |
 |------|--------|
-| ○ | Screen can sleep normally |
-| ◉ | Screen forced to stay awake |
+| Outline star | Both modes off |
+| Glowing filled star | Awake - screen on is on |
+| Plain filled star | Awake - screen off is on |
 
-**To verify screen is actually awake:**
-1. Toggle to ◉
+**To verify Awake - screen on works:**
+1. Click "Awake - screen on"
 2. Step away from your Mac
 3. Wait 5 minutes
 4. Screen should still be on (normally it would sleep after ~5 min)
+
+**To verify Awake - screen off works:**
+1. Click "Awake - screen off"
+2. Don't touch anything for about a minute
+3. Screen should turn off on its own, Mac stays reachable/running
+4. Move the mouse — screen wakes immediately
 
 ---
 
@@ -102,7 +113,7 @@ python3 keepmeup_menu.py
 To make KeepMeUp automatically launch every time you turn on your Mac:
 
 ```bash
-bash ~/KeepMeUp/setup_autostart.sh
+bash ~/keepmeup/setup_autostart.sh
 ```
 
 That's it! Next time you restart, KeepMeUp will be in your menu bar automatically.

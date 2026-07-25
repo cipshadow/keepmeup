@@ -1,13 +1,14 @@
 # KeepMeUp 
 
-A lightweight macOS menu bar app that keeps your screen awake when enabled.
+A lightweight macOS menu bar app with two power modes: keep your screen awake,
+or keep your Mac awake while letting the screen turn off.
 
 ## Features
 
-- 💤/✨ Toggle switch in the menu bar (top toolbar)
-- One-click enable/disable screen sleep prevention
-- Uses native `caffeinate` command
-- Zero additional dependencies
+- Jagged star icon in the menu bar, three states (off / screen awake / device awake)
+- Two independent modes, click to toggle each on/off
+- Uses native `caffeinate` and `pmset` commands
+- Self-contained app bundle (vendors its own Python venv — no external dependency on this repo's location)
 - Minimal resource usage
 
 ## Quick Start
@@ -33,10 +34,15 @@ Then launch from Applications or Spotlight (Cmd+Space → "KeepMeUp").
 
 ## How to use
 
-1. Launch the app - you should see **○** appear in your menu bar (top right)
-2. **Click the menu bar icon** to toggle between:
-   - **○** = Screen can sleep normally  
-   - **◉** = Screen stays awake indefinitely
+1. Launch the app — a jagged star icon (outline) appears in your menu bar (top right)
+2. Click the icon to open the menu, with three options:
+   - **Awake - screen on** — display and system both stay awake indefinitely.
+     Icon becomes a glowing filled star.
+   - **Awake - screen off** — the Mac won't idle-sleep, but the
+     display is actively turned off after 1 minute of no mouse/keyboard input
+     (and wakes normally on the next input, then turns off again after another
+     minute of inactivity). Icon becomes a plain filled star.
+   - **Off** — both stopped. Icon returns to the outline star.
 3. Select "Quit" from the menu to stop the app
 
 ## Auto-start on login
