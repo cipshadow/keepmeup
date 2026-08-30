@@ -132,14 +132,13 @@ echo "✅ KeepMeUp.app installed to ~/Applications/"
 echo ""
 
 # Point the LaunchAgent (if any) at the stable installed copy, not the repo.
+# The checked-in plist is a template containing __HOME__; expand it into the
+# LaunchAgent destination only. Never rewrite the template itself — doing that
+# bakes the current user's home directory into a tracked file.
 LAUNCH_AGENT="$HOME/Library/LaunchAgents/com.local.keepmeup.plist"
-if [ -f "$SCRIPT_DIR/com.local.keepmeup.plist" ]; then
-    sed "s|/Users/[^<]*KeepMeUp.app|$INSTALLED_PATH|" "$SCRIPT_DIR/com.local.keepmeup.plist" > "$SCRIPT_DIR/com.local.keepmeup.plist.tmp" \
-        && mv "$SCRIPT_DIR/com.local.keepmeup.plist.tmp" "$SCRIPT_DIR/com.local.keepmeup.plist"
-fi
-if [ -f "$LAUNCH_AGENT" ]; then
+if [ -f "$LAUNCH_AGENT" ] && [ -f "$SCRIPT_DIR/com.local.keepmeup.plist" ]; then
     launchctl unload "$LAUNCH_AGENT" 2>/dev/null || true
-    cp "$SCRIPT_DIR/com.local.keepmeup.plist" "$LAUNCH_AGENT"
+    sed "s|__HOME__|$HOME|g" "$SCRIPT_DIR/com.local.keepmeup.plist" > "$LAUNCH_AGENT"
     launchctl load "$LAUNCH_AGENT"
     echo "✅ LaunchAgent updated to point at ~/Applications/KeepMeUp.app"
     echo ""
