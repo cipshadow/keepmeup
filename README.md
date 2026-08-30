@@ -109,3 +109,7 @@ keepmeup/
     ├── icon_*.png            # menu bar icons, checked in so install needs no Pillow
     └── AppIcon.icns          # app bundle icon
 ```
+
+## License
+
+MIT — see [LICENSE](LICENSE).
