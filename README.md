@@ -91,7 +91,7 @@ The bundle is self-contained, so the usual fix is to rebuild it:
 ```bash
 python3 -m venv venv
 source venv/bin/activate
-pip install rumps pyobjc-framework-Cocoa
+pip install -r requirements.txt
 python3 keepmeup_menu.py
 ```
 

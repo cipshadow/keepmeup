@@ -24,8 +24,7 @@ mkdir -p "$BUNDLE_PATH/Contents/Resources"
 # longer depends on this repo (or any fixed path) still existing at
 # whatever location it happened to be built from.
 python3 -m venv "$BUNDLE_PATH/Contents/Resources/venv"
-"$BUNDLE_PATH/Contents/Resources/venv/bin/pip" install -q --upgrade pip
-"$BUNDLE_PATH/Contents/Resources/venv/bin/pip" install -q rumps pyobjc-framework-Cocoa
+"$BUNDLE_PATH/Contents/Resources/venv/bin/pip" install -q -r "$SCRIPT_DIR/requirements.txt"
 
 cp "$SCRIPT_DIR/keepmeup_menu.py" "$BUNDLE_PATH/Contents/Resources/keepmeup_menu.py"
 
