@@ -119,7 +119,7 @@ class KeepMeUp(rumps.App):
         """Prevent both display sleep and idle system sleep."""
         try:
             self.process = subprocess.Popen(
-                ["caffeinate", "-d", "-i"],
+                ["caffeinate", "-d", "-i", "-w", str(os.getpid())],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
@@ -137,7 +137,7 @@ class KeepMeUp(rumps.App):
         """Prevent idle system sleep only; actively cycle the display off/on."""
         try:
             self.process = subprocess.Popen(
-                ["caffeinate", "-i"],
+                ["caffeinate", "-i", "-w", str(os.getpid())],
                 stdout=subprocess.DEVNULL,
                 stderr=subprocess.DEVNULL
             )
