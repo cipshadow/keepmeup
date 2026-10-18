@@ -59,7 +59,7 @@ cd "$BUNDLE_DIR" >> "$LOG_FILE" 2>&1
 
 # Replace the launcher with Python so quitting or replacing the app cannot
 # leave an untracked menu process behind.
-exec "$BUNDLE_DIR/venv/bin/python3" "$BUNDLE_DIR/keepmeup_menu.py" >> "$LOG_FILE" 2>&1
+exec "$BUNDLE_DIR/venv/bin/python3" -B "$BUNDLE_DIR/keepmeup_menu.py" >> "$LOG_FILE" 2>&1
 LAUNCHER
 
 chmod +x "$BUNDLE_PATH/Contents/MacOS/$APP_NAME"
