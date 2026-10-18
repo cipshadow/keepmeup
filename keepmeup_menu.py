@@ -224,10 +224,17 @@ if __name__ == "__main__":
         import traceback
         log(traceback.format_exc())
         sys.stderr.write(f"Error: {e}\n")
-        # Don't exit, try to stay running
         try:
-            import time
-            time.sleep(60)
-        except:
-            pass
+            dialog = (
+                'display dialog "KeepMeUp failed to start. '
+                'See ~/.keepmeup_app.log for details." '
+                'buttons {"OK"} with icon stop with title "KeepMeUp"'
+            )
+            subprocess.run(
+                ["osascript", "-e", dialog],
+                stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                check=False,
+            )
+        except Exception as dialog_error:
+            log(f"Error showing fatal error dialog: {dialog_error}")
         sys.exit(1)
