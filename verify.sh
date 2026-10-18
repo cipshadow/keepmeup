@@ -32,7 +32,7 @@ if [ ! -d "$VENV" ]; then
 fi
 echo "✅ Bundled virtual environment exists"
 
-if "$VENV/bin/python3" -c "import rumps" 2>/dev/null; then
+if PYTHONDONTWRITEBYTECODE=1 "$VENV/bin/python3" -c "import rumps" 2>/dev/null; then
     echo "✅ rumps available in the bundle"
 else
     echo "❌ rumps missing from the bundle — run ./install.sh to rebuild"
