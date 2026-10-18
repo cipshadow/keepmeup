@@ -35,3 +35,27 @@
 - **Force-push does not remove anything from GitHub — confirmed twice this session, not once.** The only way to be sure orphaned objects are gone is delete-and-recreate, then verify the old SHA is unreachable both via `git fetch <sha>` and the REST API.
 
 **How to continue:** Nothing blocking. The repo is public, clean, and linked from `cipblujdea.com`'s Projects folder as a "Mac app".
+
+### 2026-10-18 — Repaired app process cleanup and installation
+
+**Time:** 7 min active / 7 min wall clock — 1 turn from Cip, ~2 min reading (measured before handoff)
+
+**Goal:** Fix the installed app, test it, and push the repair.
+
+**What we did:**
+- Reproduced a lifecycle defect: terminating the shell launcher left the Python menu process running, and terminating Python left its `caffeinate` assertion running. The original process had no crash report and was sampled waiting in the normal macOS event loop, so this does not establish the full cause of the reported stuck menu.
+- Changed the launcher to `exec` Python, tied both power modes' `caffeinate` processes to the app PID with `-w`, and made installation stop a running Python app before replacement.
+- Fixed a rebuild failure on Python 3.14 by updating PyObjC from 10.3.1 to 12.2.1. Built the venv with copied binaries so strict bundle code-signing verification passes.
+- Reinstalled the app and verified startup, termination and relaunch, dependency health, script syntax, and code signing. Merged [PR #2](https://github.com/cipshadow/keepmeup/pull/2) into `master`.
+
+**Pending:**
+- Check menu clicks and both power modes manually. The menu-only app was not exposed to the available UI automation.
+- If it stalls again, sample the process during the stall to identify the menu failure itself.
+
+**Files involved:** `install.sh`, `keepmeup_menu.py`, `requirements.txt`.
+
+**Learned:**
+- A GUI shell launcher needs `exec` or signal forwarding so termination cannot orphan its child. `caffeinate -w <pid>` releases its assertion when the owner exits.
+- A pinned native Python package can become uninstallable after the builder's Python changes. External venv symlinks can make an app bundle fail strict signature verification.
+
+**How to continue:** The installed app is running and `master` contains PR #2. Confirm menu behavior manually; capture a process sample if the reported stall recurs.
