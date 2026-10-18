@@ -47,15 +47,18 @@
 - Changed the launcher to `exec` Python, tied both power modes' `caffeinate` processes to the app PID with `-w`, and made installation stop a running Python app before replacement.
 - Fixed a rebuild failure on Python 3.14 by updating PyObjC from 10.3.1 to 12.2.1. Built the venv with copied binaries so strict bundle code-signing verification passes.
 - Reinstalled the app and verified startup, termination and relaunch, dependency health, script syntax, and code signing. Merged [PR #2](https://github.com/cipshadow/keepmeup/pull/2) into `master`.
+- A final review found that `exec` had removed the launcher's fatal-error dialog. Restored the alert in Python's fatal-error handler and verified that the handler requests the dialog and exits with status 1.
+- Found that Python imports changed signed `.pyc` files after launch, making bundle verification fail. Disabled bytecode writes in the launcher and verification script.
 
 **Pending:**
 - Check menu clicks and both power modes manually. The menu-only app was not exposed to the available UI automation.
 - If it stalls again, sample the process during the stall to identify the menu failure itself.
 
-**Files involved:** `install.sh`, `keepmeup_menu.py`, `requirements.txt`.
+**Files involved:** `install.sh`, `keepmeup_menu.py`, `requirements.txt`, `verify.sh`, `SESSION_LOG.md`.
 
 **Learned:**
 - A GUI shell launcher needs `exec` or signal forwarding so termination cannot orphan its child. `caffeinate -w <pid>` releases its assertion when the owner exits.
 - A pinned native Python package can become uninstallable after the builder's Python changes. External venv symlinks can make an app bundle fail strict signature verification.
+- Running Python inside a signed app can rewrite bundled `.pyc` files. Use `-B` for the app and disable bytecode writes in verification commands.
 
 **How to continue:** The installed app is running and `master` contains PR #2. Confirm menu behavior manually; capture a process sample if the reported stall recurs.
