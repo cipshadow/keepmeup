@@ -23,7 +23,7 @@ mkdir -p "$BUNDLE_PATH/Contents/Resources"
 # Vendor a private venv + the script INSIDE the bundle, so the app no
 # longer depends on this repo (or any fixed path) still existing at
 # whatever location it happened to be built from.
-python3 -m venv "$BUNDLE_PATH/Contents/Resources/venv"
+python3 -m venv --copies "$BUNDLE_PATH/Contents/Resources/venv"
 "$BUNDLE_PATH/Contents/Resources/venv/bin/pip" install -q -r "$SCRIPT_DIR/requirements.txt"
 
 cp "$SCRIPT_DIR/keepmeup_menu.py" "$BUNDLE_PATH/Contents/Resources/keepmeup_menu.py"
@@ -57,17 +57,9 @@ echo "BUNDLE_DIR: $BUNDLE_DIR" >> "$LOG_FILE" 2>&1
 source "$BUNDLE_DIR/venv/bin/activate" >> "$LOG_FILE" 2>&1
 cd "$BUNDLE_DIR" >> "$LOG_FILE" 2>&1
 
-python3 keepmeup_menu.py >> "$LOG_FILE" 2>&1
-status=$?
-
-# 143 (SIGTERM) and 137 (SIGKILL) mean something else terminated the app
-# (Force Quit, Activity Monitor, a new launch replacing this one) — not a
-# startup failure, so don't show a dialog for those.
-if [ $status -ne 0 ] && [ $status -ne 143 ] && [ $status -ne 137 ]; then
-    fail "keepmeup_menu.py exited with status $status. See $LOG_FILE for details."
-fi
-
-exit $status
+# Replace the launcher with Python so quitting or replacing the app cannot
+# leave an untracked menu process behind.
+exec "$BUNDLE_DIR/venv/bin/python3" "$BUNDLE_DIR/keepmeup_menu.py" >> "$LOG_FILE" 2>&1
 LAUNCHER
 
 chmod +x "$BUNDLE_PATH/Contents/MacOS/$APP_NAME"
@@ -119,6 +111,7 @@ codesign --force --deep -s - "$BUNDLE_PATH" 2>/dev/null || true
 
 # Kill any old running instances before replacing the installed copy.
 pkill -f "$INSTALLED_PATH/Contents/MacOS/$APP_NAME" 2>/dev/null || true
+pkill -f "$INSTALLED_PATH/Contents/Resources/keepmeup_menu.py" 2>/dev/null || true
 
 mkdir -p "$HOME/Applications"
 rm -rf "$INSTALLED_PATH"
