@@ -11,8 +11,9 @@ once because the whole point of the app is behaviour you only notice by
 ./verify.sh
 ```
 
-Confirms the app bundle exists, its vendored virtualenv is intact, `rumps` is
-importable, and `keepmeup_menu.py` compiles.
+Confirms the app bundle exists, has a valid ad-hoc signature, includes its
+assets, targets macOS 13+, and that `keepmeup_menu.py` compiles. Release builds
+also verify every bundled Mach-O binary supports both Intel and Apple Silicon.
 
 ## Manual checks
 
@@ -55,22 +56,21 @@ Throughout, the Mac itself stays awake, so anything running keeps running.
 **Nothing happens when you click the icon**
 
 ```bash
-pkill -f keepmeup_menu.py
+pkill -f 'KeepMeUp.app/Contents/MacOS/KeepMeUp'
 open ~/Applications/KeepMeUp.app
 ```
 
 **The icon never appears**
 
 The app may be running with its icon hidden behind other menu bar items —
-check with `pgrep -f keepmeup_menu.py`. If it is running, try removing some
+check with `pgrep -f 'KeepMeUp.app/Contents/MacOS/KeepMeUp'`. If it is running, try removing some
 menu bar icons or using a menu bar manager.
 
 **It crashes on launch**
 
-The launcher logs startup failures and shows a dialog. Check the log, then
-rebuild:
+The app logs startup failures and shows a dialog. Check the log, then rebuild:
 
 ```bash
-cat ~/.keepmeup.log
+cat ~/.keepmeup_app.log
 ./install.sh
 ```

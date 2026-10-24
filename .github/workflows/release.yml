@@ -1,0 +1,58 @@
+name: Release KeepMeUp
+
+on:
+  pull_request:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    # macos-13 is an Intel host. Its universal2 CPython can emit one bundle
+    # that runs natively on both Intel and Apple Silicon Macs.
+    runs-on: macos-13
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
+
+      - name: Install universal2 CPython
+        run: |
+          curl --fail --location --retry 3 --output python.pkg \
+            https://www.python.org/ftp/python/3.12.11/python-3.12.11-macos11.pkg
+          sudo installer -pkg python.pkg -target /
+          echo "/Library/Frameworks/Python.framework/Versions/3.12/bin" >> "$GITHUB_PATH"
+          lipo -archs /Library/Frameworks/Python.framework/Versions/3.12/Python | grep -E 'arm64.*x86_64|x86_64.*arm64'
+
+      - name: Build universal app and DMG
+        env:
+          VERSION: ${{ github.ref_name }}
+        run: ./scripts/build_release.sh --require-universal
+
+      - name: Upload release candidate
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: KeepMeUp-${{ github.ref_name }}-universal2
+          path: |
+            release/*.dmg
+            release/*.sha256
+          if-no-files-found: error
+
+      - name: Publish unsigned release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@3bb12739c298aeb8a4eeaf626c5b8d85266b0e65 # v2.3.3
+        with:
+          files: |
+            release/*.dmg
+            release/*.sha256
+          generate_release_notes: true
+          body: |
+            ## Install
+
+            Download the `.dmg`, open it, and drag **KeepMeUp** to Applications.
+
+            This unsigned release is not notarized. At first launch, Control-click
+            KeepMeUp in Applications, choose **Open**, then choose **Open** again.
+            macOS remembers that choice for this installed version.
