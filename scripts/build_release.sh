@@ -68,7 +68,7 @@ PYINSTALLER_ARGS=(
     --name "$APP_NAME"
     --osx-bundle-identifier com.local.keepmeup
     --icon assets/AppIcon.icns
-    --add-data "assets:assets"
+    --add-data "$REPO_DIR/assets:assets"
     --collect-all rumps
     --hidden-import AppKit
     --target-architecture universal2
