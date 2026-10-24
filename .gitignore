@@ -5,3 +5,7 @@ __pycache__/
 node_modules/
 *.pyc
 KeepMeUp.app/
+build/
+dist/
+release/
+.build-venv/

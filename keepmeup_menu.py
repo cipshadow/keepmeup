@@ -19,7 +19,11 @@ except ImportError:
 # Enable logging
 LOG_FILE = os.path.expanduser("~/.keepmeup_app.log")
 
-ASSETS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "assets")
+# PyInstaller places bundled data in ``sys._MEIPASS``. Keep the normal
+# source-tree path for development, so running this file directly still works.
+ASSETS_DIR = os.path.join(
+    getattr(sys, "_MEIPASS", os.path.dirname(os.path.abspath(__file__))), "assets"
+)
 
 MODE_OFF = "off"
 MODE_SCREEN_AWAKE = "screen_awake"
