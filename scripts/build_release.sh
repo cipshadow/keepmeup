@@ -7,6 +7,9 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 APP_NAME="KeepMeUp"
 VERSION="${VERSION:-$(git -C "$REPO_DIR" describe --tags --always --dirty 2>/dev/null || echo dev)}"
+# Pull-request refs can contain a slash (for example, "4/merge"). Keep the
+# artifact filename flat so the release build can produce its DMG.
+VERSION="${VERSION//\//-}"
 BUILD_DIR="$REPO_DIR/build"
 DIST_DIR="$REPO_DIR/dist"
 RELEASE_DIR="$REPO_DIR/release"
@@ -67,7 +70,7 @@ PYINSTALLER_ARGS=(
     --windowed
     --name "$APP_NAME"
     --osx-bundle-identifier com.local.keepmeup
-    --icon assets/AppIcon.icns
+    --icon "$REPO_DIR/assets/AppIcon.icns"
     --add-data "$REPO_DIR/assets:assets"
     --collect-all rumps
     --hidden-import AppKit
