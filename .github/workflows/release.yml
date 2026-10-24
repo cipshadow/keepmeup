@@ -21,10 +21,10 @@ jobs:
       - name: Install universal2 CPython
         run: |
           curl --fail --location --retry 3 --output python.pkg \
-            https://www.python.org/ftp/python/3.12.11/python-3.12.11-macos11.pkg
+            https://www.python.org/ftp/python/3.13.11/python-3.13.11-macos11.pkg
           sudo installer -pkg python.pkg -target /
-          echo "/Library/Frameworks/Python.framework/Versions/3.12/bin" >> "$GITHUB_PATH"
-          lipo -archs /Library/Frameworks/Python.framework/Versions/3.12/Python | grep -E 'arm64.*x86_64|x86_64.*arm64'
+          echo "/Library/Frameworks/Python.framework/Versions/3.13/bin" >> "$GITHUB_PATH"
+          lipo -archs /Library/Frameworks/Python.framework/Versions/3.13/Python | grep -E 'arm64.*x86_64|x86_64.*arm64'
 
       - name: Build universal app and DMG
         env:
