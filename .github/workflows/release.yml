@@ -12,9 +12,9 @@ permissions:
 
 jobs:
   release:
-    # macos-13 is an Intel host. Its universal2 CPython can emit one bundle
+    # A supported Intel host plus universal2 CPython emits one bundle
     # that runs natively on both Intel and Apple Silicon Macs.
-    runs-on: macos-13
+    runs-on: macos-15-intel
     steps:
       - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
 
