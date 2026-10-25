@@ -34,7 +34,7 @@ jobs:
       - name: Upload release candidate
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
-          name: KeepMeUp-${{ github.ref_name }}-universal2
+          name: KeepMeUp-${{ github.event.pull_request.number || github.ref_name }}-universal2
           path: |
             release/*.dmg
             release/*.sha256
