@@ -110,7 +110,28 @@ fi
 "$REPO_DIR/verify.sh" "${VERIFY_ARGS[@]}"
 
 DMG_PATH="$RELEASE_DIR/$APP_NAME-$VERSION-universal2.dmg"
-hdiutil create -volname "$APP_NAME" -srcfolder "$APP_PATH" -ov -format UDZO "$DMG_PATH" >/dev/null
+DMG_STAGE="$BUILD_DIR/dmg-stage"
+rm -rf "$DMG_STAGE"
+mkdir -p "$DMG_STAGE"
+ditto "$APP_PATH" "$DMG_STAGE/$APP_NAME.app"
+ln -s /Applications "$DMG_STAGE/Applications"
+hdiutil create -volname "$APP_NAME" -srcfolder "$DMG_STAGE" -ov -format UDZO "$DMG_PATH" >/dev/null
+
+# Guard the install experience, not only the bundle. A user opening the DMG
+# must see an Applications shortcut instead of launching the app in place.
+DMG_VERIFY_MOUNT="$(mktemp -d)"
+cleanup_dmg_verify_mount() {
+    hdiutil detach "$DMG_VERIFY_MOUNT" >/dev/null 2>&1 || true
+    rmdir "$DMG_VERIFY_MOUNT" 2>/dev/null || true
+}
+trap cleanup_dmg_verify_mount EXIT
+hdiutil attach -readonly -nobrowse -mountpoint "$DMG_VERIFY_MOUNT" "$DMG_PATH" >/dev/null
+test -d "$DMG_VERIFY_MOUNT/$APP_NAME.app"
+test -L "$DMG_VERIFY_MOUNT/Applications"
+test "$(readlink "$DMG_VERIFY_MOUNT/Applications")" = /Applications
+cleanup_dmg_verify_mount
+trap - EXIT
+
 (cd "$RELEASE_DIR" && shasum -a 256 "$(basename "$DMG_PATH")" > "$(basename "$DMG_PATH").sha256")
 
 echo "✅ Built $DMG_PATH"
