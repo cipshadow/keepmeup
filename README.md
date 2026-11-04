@@ -1,37 +1,39 @@
 # KeepMeUp
 
-A lightweight macOS menu bar app with two power modes: keep your screen awake,
-or keep your Mac awake while letting the screen turn off.
+KeepMeUp is a lightweight macOS menu bar app with two power modes: keep your
+screen awake, or keep your Mac awake while letting the screen turn off. It
+needs macOS 13 Ventura or later, and it runs on Intel and Apple Silicon Macs.
 
 The second mode is the useful one — long downloads, builds, or renders finish
 without the machine idle-sleeping, while the display still switches off instead
 of burning for hours.
 
-## Features
+## Installing
 
-- Jagged star icon in the menu bar, three states (off / screen awake / device awake)
-- Two independent modes, click to toggle each on/off
-- Uses native `caffeinate` and `pmset`, no kernel extensions or privileged helpers
-- Self-contained universal app bundle for Intel and Apple Silicon Macs
-- Minimal resource usage
+1. Download the latest DMG from the
+   [GitHub Releases page](https://github.com/cipshadow/keepmeup/releases).
+   The file is named `KeepMeUp-<version>-universal2.dmg`.
+2. Open the DMG and drag **KeepMeUp** into the **Applications** folder.
+3. Open KeepMeUp. The first time, macOS says it can't verify the developer
+   and will not open the app.
 
-## Requirements
+KeepMeUp is a free open-source app built by an indie developer, without a paid
+Apple developer certificate, and the source is right here. You only need to
+allow it once for each version you download.
 
-- macOS 13 Ventura or later
-- Intel or Apple Silicon Mac
+**macOS 15 Sequoia and later:** go to **System Settings**, then
+**Privacy & Security**. Scroll down and click **Open Anyway**, then confirm.
 
-## Install
+**Older macOS:** right-click the app in Applications and choose **Open**.
 
-1. Download `KeepMeUp-<version>-universal2.dmg` from the latest
-   [GitHub release](https://github.com/cipshadow/keepmeup/releases).
-2. Open the DMG and drag **KeepMeUp** to Applications.
-3. Control-click KeepMeUp in Applications, choose **Open**, then choose
-   **Open** again. This is required once per downloaded version because these
-   releases are unsigned and not notarized.
+Prefer Terminal? Run this, then open the app as usual:
+
+```bash
+xattr -dr com.apple.quarantine /Applications/KeepMeUp.app
+```
 
 The released app includes Python and all dependencies. It keeps working after
-you delete the DMG or repository, and it does not need Homebrew or Python on
-the Mac.
+you delete the DMG, and it does not need Homebrew or Python on the Mac.
 
 ### Build from source
 
@@ -46,6 +48,19 @@ cd keepmeup
 
 `install.sh` builds an app with PyInstaller and copies it to
 `~/Applications/KeepMeUp.app`.
+
+## Features
+
+- Jagged star icon in the menu bar, three states (off / screen awake / device awake)
+- Two independent modes, click to toggle each on/off
+- Uses native `caffeinate` and `pmset`, no kernel extensions or privileged helpers
+- Self-contained universal app bundle for Intel and Apple Silicon Macs
+- Minimal resource usage
+
+## Requirements
+
+- macOS 13 Ventura or later
+- Intel or Apple Silicon Mac
 
 ## How to use
 
@@ -94,8 +109,8 @@ them as a dialog, so that log is the first place to look.
 
 **macOS says it cannot verify the app**
 
-Control-click the app in Applications, choose **Open**, then choose **Open**
-again. This is the expected first-launch flow for an unsigned release.
+That message is expected the first time you open a downloaded release. Follow
+the steps in [Installing](#installing).
 
 **The app crashes on launch**
 
