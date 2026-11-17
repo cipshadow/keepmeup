@@ -9,8 +9,10 @@ of burning for hours.
 
 ## Features
 
-- Jagged star icon in the menu bar, three states (off / screen awake / device awake)
+- Monochrome sun icon in the menu bar: outline when off, solid when the screen
+  stays on, and outlined with a centre dot when the screen can turn off
 - Two independent modes, click to toggle each on/off
+- Custom timers that choose a temporary mode and what happens when it ends
 - Uses native `caffeinate` and `pmset`, no kernel extensions or privileged helpers
 - Self-contained universal app bundle for Intel and Apple Silicon Macs
 - Minimal resource usage
@@ -49,15 +51,20 @@ cd keepmeup
 
 ## How to use
 
-Launch the app and a jagged star icon (outline) appears in the menu bar. Click
-it for three options:
+Launch the app and an outline sun appears in the menu bar. Click it for three
+options:
 
 - **Awake - screen on** — display and system both stay awake indefinitely.
-  Icon becomes a glowing filled star.
+  Icon becomes a solid filled sun.
 - **Awake - screen off** — the Mac won't idle-sleep, but the display turns off
   after 1 minute of no input (and wakes on the next input, then turns off again
-  after another idle minute). Icon becomes a plain filled star.
-- **Off** — both stopped. Icon returns to the outline star.
+  after another idle minute). Icon becomes an outlined sun with a centre dot.
+- **Off** — both stopped. Icon returns to the outline sun.
+
+Use the **Timer** submenu to select a temporary mode, a custom number of
+minutes, and an end action. The end action can turn KeepMeUp off, switch to
+screen-off mode, or lock the Mac. Choosing a mode manually cancels an active
+timer and shows a notification. Timers reset after a restart.
 
 "Quit" stops the app.
 
